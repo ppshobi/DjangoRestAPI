@@ -42,4 +42,12 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, bucketlist)
 
-    
+    def test_api_can_update_a_bucket_list(self):
+        bucketlist = BucketList.objects.get()
+        new_bucket_list={'name':'Something new'}
+
+        response = self.client.put(reverse('details', kwargs={'pk': bucketlist.id}), new_bucket_list, format="json")
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(new_bucket_list['name'], BucketList.objects.get(pk=bucketlist.id).name)
+
