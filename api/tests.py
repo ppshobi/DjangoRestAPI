@@ -29,10 +29,10 @@ class ViewTestCase(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.bucketlist_data = {'name' : 'Goto Usa'}
-
-        self.response = self.client.post(reverse('create'), self.bucketlist_data, format="json")    
-
+        self.response = self.client.post(reverse('create'), self.bucketlist_data, format="json")          
+    
     def test_api_can_create_a_bucket_list(self):
+ 
         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
     def test_api_can_get_a_bucket_list(self):
@@ -51,3 +51,9 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(new_bucket_list['name'], BucketList.objects.get(pk=bucketlist.id).name)
 
+    def test_api_can_delete_a_list(self):
+        pk = BucketList.objects.get().id
+        response = self.client.delete(reverse('details', kwargs={'pk':pk}), format="json", follow=True)
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
